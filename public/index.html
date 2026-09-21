@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>DigitalOcean Managed Database Migration Tool</title>
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header>
+    <h1>🐘 Managed Database Migration Tool</h1>
+    <p>Plan a migration into DigitalOcean Managed Databases, generated via DigitalOcean Serverless Inference.</p>
+    <p id="endpoint-badge">Loading endpoint info…</p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <label for="source-engine">Source engine</label>
+      <select id="source-engine">
+        <option value="MySQL">MySQL (self-hosted or other cloud)</option>
+        <option value="PostgreSQL" selected>PostgreSQL (self-hosted or other cloud)</option>
+        <option value="SQL Server">SQL Server</option>
+        <option value="Oracle">Oracle</option>
+        <option value="SQLite">SQLite</option>
+        <option value="MongoDB">MongoDB (self-hosted or other cloud)</option>
+        <option value="Redis">Redis (self-hosted or other cloud)</option>
+        <option value="Kafka">Kafka (self-hosted or other cloud)</option>
+      </select>
+
+      <label for="schema">Source schema / data description</label>
+      <textarea id="schema" rows="9" placeholder="Paste DDL, or describe the data (tables, approximate size, indexes, etc.)">CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  customer_id INTEGER NOT NULL,
+  total_cents INTEGER NOT NULL,
+  status VARCHAR(20) DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT now()
+);
+
+-- ~2.4M rows, self-hosted Postgres 14 on a VM, no replication currently.</textarea>
+
+      <label for="target-engine">Target: DigitalOcean Managed Database engine</label>
+      <select id="target-engine">
+        <!-- populated from /api/target-engines -->
+      </select>
+
+      <div class="row">
+        <div class="field">
+          <label for="cluster-name">Cluster name (optional)</label>
+          <input id="cluster-name" type="text" placeholder="e.g. orders-prod" />
+        </div>
+        <div class="field">
+          <label for="region">Region (optional)</label>
+          <input id="region" type="text" placeholder="e.g. nyc3" />
+        </div>
+        <div class="field">
+          <label for="node-size">Node size (optional)</label>
+          <input id="node-size" type="text" placeholder="e.g. db-s-2vcpu-4gb" />
+        </div>
+      </div>
+
+      <button id="migrate-btn">Generate Migration Plan</button>
+
+      <div class="output" id="output">Your migration plan, commands, and rollback notes will appear here.</div>
+      <div class="meta" id="meta"></div>
+    </section>
+  </main>
+
+  <footer>
+    Calls <code>POST /v1/chat/completions</code> on DigitalOcean Serverless Inference
+    (<code>https://inference.do-ai.run/v1</code>) with your <code>MODEL_ACCESS_KEY</code>.
+    This tool only generates a plan — it does not connect to any database or run anything.
+    Managed Database clusters require TLS for every connection; review commands before running them.
+  </footer>
+
+  <script src="/script.js"></script>
+</body>
+</html>
