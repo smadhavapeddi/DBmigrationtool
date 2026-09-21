@@ -108,7 +108,7 @@ app.post("/api/migrate", async (req, res) => {
         { role: "system", content: SYSTEM_PROMPT },
         { role: "user", content: userPrompt },
       ],
-      max_completion_tokens: 1000,
+      max_completion_tokens: 1500,
       temperature: 0.3,
     });
     res.json({
