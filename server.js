@@ -11,7 +11,7 @@ import express from "express";
 import OpenAI from "openai";
 
 const MODEL_ACCESS_KEY = process.env.MODEL_ACCESS_KEY;
-const TEXT_MODEL = process.env.TEXT_MODEL || "llama3.3-70b-instruct";
+const TEXT_MODEL = process.env.TEXT_MODEL || "deepseek-v4.1-flash";
 const PORT = process.env.PORT || 8080;
 const BASE_URL = "https://inference.do-ai.run/v1";
 
